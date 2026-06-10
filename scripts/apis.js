@@ -178,7 +178,8 @@ function parseTweet(res) {
     let tweet = res.legacy;
     if (!res.core) return;
     tweet.user = res.core.user_results.result.legacy;
-    tweet.user.id_str = tweet.user_id_str;
+    tweet.user.id_str =
+        tweet.user_id_str || res.core.user_results.result.rest_id;
     const ur = res.core.user_results.result;
     if(ur?.location?.location) tweet.user.location = ur.location.location;
     if(ur?.avatar?.image_url) tweet.user.profile_image_url_https = ur.avatar.image_url;
@@ -255,7 +256,8 @@ function parseTweet(res) {
                     }
                 }
                 result.legacy.quoted_status.user = qu;
-                result.legacy.quoted_status.user.id_str = qu.id_str;
+                result.legacy.quoted_status.user.id_str =
+                    qu.id_str || qur.rest_id;
                 tweetStorage[result.legacy.quoted_status.id_str] =
                     result.legacy.quoted_status;
                 tweetStorage[result.legacy.quoted_status.id_str].cacheDate =
@@ -300,7 +302,8 @@ function parseTweet(res) {
                     }
                 }
                 result.legacy.quoted_status.user = qu;
-                result.legacy.quoted_status.user.id_str = qu.id_str;
+                result.legacy.quoted_status.user.id_str =
+                    qu.id_str || qur.rest_id;
                 tweetStorage[result.legacy.quoted_status.id_str] =
                     result.legacy.quoted_status;
                 tweetStorage[result.legacy.quoted_status.id_str].cacheDate =
@@ -337,7 +340,7 @@ function parseTweet(res) {
                 }
             }
             tweet.retweeted_status.user = u;
-            tweet.retweeted_status.user.id_str = u.id_str;
+            tweet.retweeted_status.user.id_str = u.id_str || ur.rest_id;
             tweet.retweeted_status.ext = {};
             if (result.views) {
                 tweet.retweeted_status.ext.views = {
@@ -416,7 +419,7 @@ function parseTweet(res) {
                     }
                 }
                 tweet.quoted_status.user = u;
-                tweet.quoted_status.user.id_str = u.id_str;
+                tweet.quoted_status.user.id_str = u.id_str || ur.rest_id;
                 tweet.quoted_status.ext = {};
                 if (result.views) {
                     tweet.quoted_status.ext.views = {
